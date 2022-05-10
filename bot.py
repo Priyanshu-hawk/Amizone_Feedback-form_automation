@@ -68,7 +68,7 @@ def chromeDriverDownloader():
             try:
                 todl = subprocess.run(['google-chrome',' --version'], capture_output=True).stdout.decode()
                 vrsn  = (todl.split(" "))[2]
-                print("Downloading Chromedriver for your system of version:",vrsn)
+                print("Downloading Chromedriver for your system of version:",get_download_version(vrsn))
                 url = "https://chromedriver.storage.googleapis.com/"+get_download_version(vrsn)+"/chromedriver_mac64.zip"
                 r = requests.get(url, allow_redirects=True)
                 open("chromeDriver_zips/chromedriver_mac64.zip","wb").write(r.content)
@@ -92,7 +92,7 @@ def chromeDriverDownloader():
             try:
                 todl = os.popen('reg query "HKEY_CURRENT_USER\Software\Google\Chrome\BLBeacon" /v version')
                 vrsn = todl.read().split(" ")[-1].strip()
-                print("Downloading Chromedriver for your system of version:",vrsn)
+                print("Downloading Chromedriver for your system of version:",get_download_version(vrsn))
                 url = "https://chromedriver.storage.googleapis.com/"+get_download_version(vrsn)+"/chromedriver_win32.zip"
                 r = requests.get(url, allow_redirects=True)
                 open("chromeDriver_zips/chromedriver_win32.zip","wb").write(r.content)
