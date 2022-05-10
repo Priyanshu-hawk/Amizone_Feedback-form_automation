@@ -1,5 +1,6 @@
 from sys import platform
 import subprocess, requests, os
+import requests, xml.etree.ElementTree as ET
 try:
     import selenium
 except ModuleNotFoundError:
@@ -11,12 +12,30 @@ except ModuleNotFoundError:
     if platform == "win32":
         subprocess.call("pip install selenium", shell=True)
 
+def front_version_extractor(vrsn):
+    vrsn = str(vrsn).split(".")
+    n_version = ""
+    for i in range(len(vrsn)-1):
+        n_version+=vrsn[i]
+    return n_version
+    
 def versionChk():
     chrome_version  = subprocess.run(['google-chrome',' --version'], capture_output=True).stdout.decode().split(" ")[2] # chrome version check
     chrome_driver_version = subprocess.run(['./chromedriver',' --version'], capture_output=True).stdout.decode().split(" ")[1] # chromeDriver check
     return chrome_version == chrome_driver_version
 
 curPlt = platform
+
+def get_download_version(c_version):
+    r = requests.get("https://chromedriver.storage.googleapis.com/?delimiter=/&prefix=")
+
+    version_info = ET.fromstring(r.content)
+
+    for i in version_info.iter('{http://doc.s3.amazonaws.com/2006-03-01}Prefix'):
+        curr_version = i.text
+        if curr_version != None:
+            if front_version_extractor(c_version) == front_version_extractor(curr_version):
+                return str(curr_version[:-1])
 
 def chromeDriverDownloader():
     if curPlt == 'linux':
@@ -25,8 +44,8 @@ def chromeDriverDownloader():
             try:
                 todl = subprocess.run(['google-chrome',' --version'], capture_output=True).stdout.decode()
                 vrsn  = (todl.split(" "))[2]
-                print("Downloading Chromedriver for your system of version:",vrsn)
-                url = "https://chromedriver.storage.googleapis.com/"+vrsn+"/chromedriver_linux64.zip"
+                print("Downloading Chromedriver for your system of version:",get_download_version(vrsn))
+                url = "https://chromedriver.storage.googleapis.com/"+get_download_version(vrsn)+"/chromedriver_linux64.zip"
                 r = requests.get(url, allow_redirects=True)
                 open("chromeDriver_zips/chromedriver_linux64.zip","wb").write(r.content)
             except FileNotFoundError as fnf:
@@ -50,7 +69,7 @@ def chromeDriverDownloader():
                 todl = subprocess.run(['google-chrome',' --version'], capture_output=True).stdout.decode()
                 vrsn  = (todl.split(" "))[2]
                 print("Downloading Chromedriver for your system of version:",vrsn)
-                url = "https://chromedriver.storage.googleapis.com/"+vrsn+"/chromedriver_mac64.zip"
+                url = "https://chromedriver.storage.googleapis.com/"+get_download_version(vrsn)+"/chromedriver_mac64.zip"
                 r = requests.get(url, allow_redirects=True)
                 open("chromeDriver_zips/chromedriver_mac64.zip","wb").write(r.content)
             except FileNotFoundError as fnf:
@@ -74,7 +93,7 @@ def chromeDriverDownloader():
                 todl = os.popen('reg query "HKEY_CURRENT_USER\Software\Google\Chrome\BLBeacon" /v version')
                 vrsn = todl.read().split(" ")[-1].strip()
                 print("Downloading Chromedriver for your system of version:",vrsn)
-                url = "https://chromedriver.storage.googleapis.com/"+vrsn+"/chromedriver_win32.zip"
+                url = "https://chromedriver.storage.googleapis.com/"+get_download_version(vrsn)+"/chromedriver_win32.zip"
                 r = requests.get(url, allow_redirects=True)
                 open("chromeDriver_zips/chromedriver_win32.zip","wb").write(r.content)
             except FileNotFoundError as fnf:
