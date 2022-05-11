@@ -61,7 +61,12 @@ def work(ida,passa,chrD_path,pref_sel):
     drive.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/form/div[1]/input[1]').send_keys(ida) # id (Check auth file)
     drive.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/form/div[2]/input').send_keys(passa) # password (Check auth file)
     drive.find_element_by_xpath('/html/body/div[1]/div/div/div[2]/form/div[4]/button').click()
-    drive.implicitly_wait(1)#resolver_err_site_ele('/html/body/div[3]/div/div[2]/div[2]/div/div/div[1]/button', drive)
+    drive.implicitly_wait(5)#resolver_err_site_ele('/html/body/div[3]/div/div[2]/div[2]/div/div/div[1]/button', drive)
+    try:
+        drive.find_element_by_xpath('/html/body/div[3]/div/div[2]/div[3]/div/div/div[1]/button').click()
+    except:
+        pass
+    
     try:
         drive.find_element_by_xpath('/html/body/div[3]/div/div[2]/div[4]/div/div/div[1]/button').click()
     except:

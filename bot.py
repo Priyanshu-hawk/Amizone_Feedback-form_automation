@@ -18,13 +18,6 @@ def front_version_extractor(vrsn):
     for i in range(len(vrsn)-1):
         n_version+=vrsn[i]
     return n_version
-    
-def versionChk():
-    chrome_version  = subprocess.run(['google-chrome',' --version'], capture_output=True).stdout.decode().split(" ")[2] # chrome version check
-    chrome_driver_version = subprocess.run(['./chromedriver',' --version'], capture_output=True).stdout.decode().split(" ")[1] # chromeDriver check
-    return chrome_version == chrome_driver_version
-
-curPlt = platform
 
 def get_download_version(c_version):
     r = requests.get("https://chromedriver.storage.googleapis.com/?delimiter=/&prefix=")
@@ -36,6 +29,16 @@ def get_download_version(c_version):
         if curr_version != None:
             if front_version_extractor(c_version) == front_version_extractor(curr_version):
                 return str(curr_version[:-1])
+    
+def versionChk():
+    chrome_version  = subprocess.run(['google-chrome',' --version'], capture_output=True).stdout.decode().split(" ")[2] # chrome version check
+    chrome_driver_version = subprocess.run(['./chromedriver',' --version'], capture_output=True).stdout.decode().split(" ")[1] # chromeDriver check
+    print(get_download_version(chrome_version), get_download_version(chrome_driver_version))
+    return get_download_version(chrome_version) == get_download_version(chrome_driver_version)
+    
+
+curPlt = platform
+
 
 def chromeDriverDownloader():
     if curPlt == 'linux':
