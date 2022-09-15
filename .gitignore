@@ -1,0 +1,7 @@
+*.pyc
+.idea
+drivers
+*/__pycache__
+debug.log
+*Profile_Fail.png
+/venv/
