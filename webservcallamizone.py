@@ -87,17 +87,20 @@ def work(ida,passa,chrD_path,pref_sel):
         cond = 0
         resolver_err_xpath('/html/body/div[3]/div/div[2]/div/div/div[2]/div[2]/div/ul/li['+str(i)+']/div[2]', drive)
         drive.find_element(By.XPATH,'/html/body/div[3]/div/div[2]/div/div/div[2]/div[2]/div/ul/li['+str(i)+']/div[2]').click()
+        sub_n = drive.find_element(By.XPATH,'/html/body/div[3]/div/div[2]/div/div/div[2]/div[2]/div/ul/li['+str(i)+']/div[3]/div[1]/h4').text
         try:
             drive.find_element(By.XPATH,'/html/body/div[3]/div/div[2]/div/div/div[2]/div[2]/div/ul/li['+str(i)+']/div[3]/div[2]/div/div/div/div[2]/div/div/div[2]/a')
         except:
-            print("done")
+            print("{} done".format(sub_n))
             cond = 1
         
         if cond == 0:
             resolver_err_xpath('/html/body/div[3]/div/div[2]/div/div/div[2]/div[2]/div/ul/li['+str(i)+']/div[3]/div[2]/div/div/div/div[2]/div/div/div[2]/a', drive)
             time.sleep(2)
             drive.find_element(By.XPATH,'/html/body/div[3]/div/div[2]/div/div/div[2]/div[2]/div/ul/li['+str(i)+']/div[3]/div[2]/div/div/div/div[2]/div/div/div[2]/a').click()
-            
+            if "[CSE3608]" in sub_n:
+                pref_sel = 5
+
             for j in range(1,chk_len_opt(1,drive)+1):
                 if temp_pref_sel == 6:
                     pref_sel = random.randint(1, 3)
@@ -127,9 +130,11 @@ def work(ida,passa,chrD_path,pref_sel):
                 drive.find_element(By.XPATH,'/html/body/div[3]/div/div[2]/div[2]/div[2]/form/div/div/div[6]/table/tbody/tr['+str(n)+']/td[3]/label/span').click()
             drive.find_element(By.XPATH,'//*[@id="FeedbackRating_Comments"]').send_keys("All good:)")
             drive.find_element(By.XPATH,'//*[@id="btnSubmit"]').click()
+            if "[CSE3608]" in sub_n:
+                pref_sel = temp_pref_sel
         drive.execute_script("window.scrollTo(0,"+str(i*70)+")")
         time.sleep(2)
-        print("done")
+        print("{} done".format(sub_n))
     time.sleep(2)
     print("Thanks!!!")
     drive.close()
