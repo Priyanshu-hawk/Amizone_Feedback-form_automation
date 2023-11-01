@@ -5,3 +5,5 @@ drivers
 debug.log
 *Profile_Fail.png
 /venv/
+chromedriver*
+*.chromedriver
